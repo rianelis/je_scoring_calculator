@@ -289,7 +289,7 @@
       <div class="action-row">
         <button onclick="resetAll()">Reset</button>
         <button onclick="printResult()">Print / Save PDF</button>
-        <button id="btn-email" style="display:none" onclick="emailResult()">Email result</button>
+        <button id="btn-email" onclick="emailResult()">Email result</button>
       </div>
     </div>
   </main>
@@ -355,7 +355,6 @@
       if (count < 3) {
         ra.innerHTML = `<div style="font-size:13px;color:var(--color-text-secondary)">Score at least 3 criteria to see a result (${count}/5 scored)</div>`;
         latestResult = null;
-        document.getElementById("btn-email").style.display = "none";
         return;
       }
 
@@ -397,7 +396,6 @@
         teamAdj,
         hybridNote
       };
-      document.getElementById("btn-email").style.display = "inline-block";
     }
 
     function resetAll() {
@@ -409,7 +407,6 @@
       buildGrid();
       document.getElementById("result-area").innerHTML = '<div style="font-size:13px;color:var(--color-text-secondary)">Score your role above to see results</div>';
       latestResult = null;
-      document.getElementById("btn-email").style.display = "none";
     }
 
     function printResult() {
