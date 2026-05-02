@@ -49,6 +49,8 @@ The calculator lets users enter role details, score five criteria from 1 to 5, a
 - Print/save-as-PDF export
 - Email-result action using a recipient email input
 
+The **Email result** button is visible by default. If users click it before completing enough scoring criteria, the app prompts them to score at least 3 criteria first.
+
 The scoring questions/criteria are in `hosted/index.html`.
 
 ## Deploy Updates
@@ -117,6 +119,34 @@ The restore instructions are in:
 
 ```text
 hosted/AUTH_RESTORE.md
+```
+
+## Handoff Package
+
+A clean ZIP package can be created from this repository with:
+
+```powershell
+Compress-Archive -Path README.md, hosted, powerapps, legacy -DestinationPath .\je-scoring-calculator-handoff.zip -Force
+```
+
+The ZIP intentionally excludes `.git`.
+
+## Git Status
+
+This folder is a local Git repository.
+
+Current main branch:
+
+```text
+master
+```
+
+Recent commits:
+
+```text
+4a31ea4 Show email result button by default
+5063f35 Add email result action
+c896db5 Prepare JE scoring calculator handoff
 ```
 
 ## Notes For Future Work
