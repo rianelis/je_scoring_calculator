@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JE Scoring Calculator</title>
+  <style>
+    :root {
+      --color-text-primary: #172033;
+      --color-text-secondary: #526070;
+      --color-text-tertiary: #7b8794;
+      --color-text-info: #0f4c81;
+      --color-background-primary: #ffffff;
+      --color-background-secondary: #f5f7fa;
+      --color-background-info: #e7f1fb;
+      --color-border-secondary: #cbd5e1;
+      --color-border-tertiary: #e2e8f0;
+      --color-border-info: #4f8fcf;
+      --border-radius-md: 6px;
+      --border-radius-lg: 8px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f8fafc;
+      color: var(--color-text-primary);
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      margin: 0 0 18px;
+    }
+    h2.sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .wrap {
+      background: var(--color-background-primary);
+      border: 1px solid var(--color-border-tertiary);
+      border-radius: var(--border-radius-lg);
+      padding: 24px;
+    }
+    .field-row { margin-bottom: 1.25rem; }
+    .field-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 6px;
+    }
+    input[type="text"],
+    select {
+      width: 100%;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: var(--border-radius-md);
+      border: 1px solid var(--color-border-secondary);
+      background: var(--color-background-primary);
+      color: var(--color-text-primary);
+    }
+    .top-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+    .criteria-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+    .criteria-card {
+      background: var(--color-background-primary);
+      border: 1px solid var(--color-border-tertiary);
+      border-radius: var(--border-radius-lg);
+      padding: 14px 16px;
+    }
+    .c-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 2px;
+    }
+    .c-hint {
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .score-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      border: 1px solid var(--color-border-secondary);
+      background: var(--color-background-secondary);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.12s;
+      user-select: none;
+    }
+    .pill.selected {
+      background: var(--color-background-info);
+      color: var(--color-text-info);
+      border-color: transparent;
+      font-weight: 600;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--color-border-tertiary);
+      margin: 1.5rem 0;
+    }
+    .result-area {
+      background: var(--color-background-secondary);
+      border-radius: var(--border-radius-lg);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .bar-wrap {
+      height: 8px;
+      background: var(--color-border-tertiary);
+      border-radius: 4px;
+      margin: 10px 0 4px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: var(--color-border-info);
+      transition: width 0.4s;
+    }
+    .bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--color-text-tertiary);
+    }
+    .insight-box {
+      border-left: 3px solid var(--color-border-info);
+      padding: 10px 14px;
+      background: var(--color-background-primary);
+      border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .insight-box strong { color: var(--color-text-primary); }
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+    .metric-card {
+      background: var(--color-background-primary);
+      border-radius: var(--border-radius-md);
+      padding: 10px 12px;
+      text-align: center;
+    }
+    .metric-val {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    .metric-lbl {
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      margin-top: 2px;
+    }
+    .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    button {
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: var(--border-radius-md);
+      border: 1px solid var(--color-border-secondary);
+      background: var(--color-background-primary);
+      color: var(--color-text-primary);
+      cursor: pointer;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+      .page {
+        max-width: none;
+        padding: 0;
+      }
+      .wrap {
+        border: 0;
+        padding: 0;
+      }
+      .action-row {
+        display: none;
+      }
+      input,
+      select {
+        border-color: #94a3b8;
+      }
+      .criteria-grid,
+      .metric-row {
+        break-inside: avoid;
+      }
+      .criteria-card,
+      .result-area {
+        break-inside: avoid;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page { padding: 12px; }
+      .wrap { padding: 16px; }
+      .top-grid,
+      .criteria-grid,
+      .metric-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h1>JE Scoring Calculator</h1>
+    <div class="wrap">
+      <h2 class="sr-only">JE scoring calculator - enter role details and criteria scores to get a grade recommendation</h2>
+
+      <div class="field-row">
+        <div class="field-label">Role title</div>
+        <input type="text" id="role-title" placeholder="e.g. Solutions Presales Specialist" oninput="calc()">
+      </div>
+
+      <div class="top-grid">
+        <div class="field-row" style="margin-bottom:0">
+          <div class="field-label">Category</div>
+          <select id="category" onchange="calc()">
+            <option value="">Select category</option>
+            <option value="Technical">Technical</option>
+            <option value="Operational">Operational</option>
+            <option value="Sales">Sales</option>
+            <option value="Hybrid: Technical + Sales">Hybrid: Technical + Sales</option>
+            <option value="Hybrid: Technical + Operational">Hybrid: Technical + Operational</option>
+            <option value="Hybrid: Sales + Operational">Hybrid: Sales + Operational</option>
+          </select>
+        </div>
+        <div class="field-row" style="margin-bottom:0">
+          <div class="field-label">Team accountability</div>
+          <select id="team" onchange="calc()">
+            <option value="">Select</option>
+            <option value="ic">Individual contributor (IC)</option>
+            <option value="guide">Guides others (no direct reports)</option>
+            <option value="manage">Manages a team (direct reports)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-label" style="margin-bottom:12px">Score each criteria (1 = basic, 5 = strategic)</div>
+      <div class="criteria-grid" id="criteria-grid"></div>
+
+      <hr class="divider">
+
+      <div class="result-area" id="result-area">
+        <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:6px">Score your role above to see results</div>
+      </div>
+
+      <div class="action-row">
+        <button onclick="resetAll()">Reset</button>
+        <button onclick="printResult()">Print / Save PDF</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const CRITERIA = [
+      { id: "scope", name: "Scope & impact", hint: "How wide is the role's accountability - task, team, function, or org?" },
+      { id: "complexity", name: "Complexity", hint: "How ambiguous and multi-domain is the work?" },
+      { id: "autonomy", name: "Autonomy", hint: "Does the role set its own direction, or follow defined plans?" },
+      { id: "stakeholder", name: "Stakeholder", hint: "Who does this role engage - internal team, clients, or executives?" },
+      { id: "expertise", name: "Expertise", hint: "How specialised and rare is the knowledge required?" },
+    ];
+
+    const GRADES = [
+      { min: 5, max: 9, grade: "B1-B2", profile: "Analyst / Junior Specialist" },
+      { min: 10, max: 13, grade: "B3-C1", profile: "Senior Analyst / Specialist" },
+      { min: 14, max: 16, grade: "C2-C3", profile: "Senior Specialist / Lead" },
+      { min: 17, max: 19, grade: "C4-C5", profile: "Principal Specialist / Senior Lead" },
+      { min: 20, max: 21, grade: "D1", profile: "Manager / Senior Principal" },
+      { min: 22, max: 25, grade: "D2-D3", profile: "Senior Manager / Director" },
+    ];
+
+    const scores = {};
+
+    function buildGrid() {
+      const g = document.getElementById("criteria-grid");
+      g.innerHTML = "";
+      CRITERIA.forEach(c => {
+        const card = document.createElement("div");
+        card.className = "criteria-card";
+        card.innerHTML = `<div class="c-name">${c.name}</div><div class="c-hint">${c.hint}</div><div class="score-pills" id="pills-${c.id}"></div>`;
+        g.appendChild(card);
+        const pills = document.getElementById("pills-" + c.id);
+        [1, 2, 3, 4, 5].forEach(n => {
+          const p = document.createElement("span");
+          p.className = "pill" + (scores[c.id] === n ? " selected" : "");
+          p.textContent = n;
+          p.onclick = () => {
+            scores[c.id] = n;
+            refreshPills(c.id);
+            calc();
+          };
+          pills.appendChild(p);
+        });
+      });
+    }
+
+    function refreshPills(cid) {
+      const pills = document.querySelectorAll("#pills-" + cid + " .pill");
+      pills.forEach((p, i) => p.classList.toggle("selected", scores[cid] === i + 1));
+    }
+
+    function calc() {
+      const scored = CRITERIA.filter(c => scores[c.id]);
+      const total = scored.reduce((s, c) => s + scores[c.id], 0);
+      const count = scored.length;
+      const category = document.getElementById("category").value;
+      const team = document.getElementById("team").value;
+
+      const ra = document.getElementById("result-area");
+      if (count < 3) {
+        ra.innerHTML = `<div style="font-size:13px;color:var(--color-text-secondary)">Score at least 3 criteria to see a result (${count}/5 scored)</div>`;
+        return;
+      }
+
+      const projected = count < 5 ? Math.round(total / count * 5) : total;
+      const grade = GRADES.find(g => projected >= g.min && projected <= g.max) || GRADES[GRADES.length - 1];
+
+      let teamAdj = "";
+      if (team === "manage" && projected < 20) teamAdj = "Team management detected - consider bumping one grade level toward D1.";
+      if (team === "ic" && projected >= 20) teamAdj = "No direct reports - D-level may be too high; confirm scope justifies this.";
+
+      let hybridNote = "";
+      if (category.startsWith("Hybrid")) hybridNote = "Hybrid role: anchor grade on the primary category, note secondary as context.";
+
+      const pct = Math.min(100, Math.round((projected - 5) / 20 * 100));
+      const incomplete = count < 5 ? `<div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:8px">(projected from ${count}/5 criteria)</div>` : "";
+
+      ra.innerHTML = `
+        ${incomplete}
+        <div class="metric-row">
+          <div class="metric-card"><div class="metric-val">${projected}</div><div class="metric-lbl">Total JE score</div></div>
+          <div class="metric-card"><div class="metric-val">${grade.grade}</div><div class="metric-lbl">Grade band</div></div>
+          <div class="metric-card"><div class="metric-val" style="font-size:14px;padding-top:4px">${category || "-"}</div><div class="metric-lbl">Category</div></div>
+        </div>
+        <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:4px">${grade.profile}</div>
+        <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%"></div></div>
+        <div class="bar-labels"><span>B1 (5)</span><span>C4-C5 (17-19)</span><span>D3 (25)</span></div>
+        ${teamAdj ? `<div class="insight-box" style="margin-top:12px"><strong>Team note:</strong> ${teamAdj}</div>` : ""}
+        ${hybridNote ? `<div class="insight-box" style="margin-top:8px"><strong>Hybrid note:</strong> ${hybridNote}</div>` : ""}
+      `;
+    }
+
+    function resetAll() {
+      CRITERIA.forEach(c => delete scores[c.id]);
+      document.getElementById("role-title").value = "";
+      document.getElementById("category").value = "";
+      document.getElementById("team").value = "";
+      buildGrid();
+      document.getElementById("result-area").innerHTML = '<div style="font-size:13px;color:var(--color-text-secondary)">Score your role above to see results</div>';
+    }
+
+    function printResult() {
+      window.print();
+    }
+
+    buildGrid();
+  </script>
+</body>
+</html>
