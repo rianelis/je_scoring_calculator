@@ -1,0 +1,332 @@
+
+<style>
+  h2.sr-only { position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0); }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: var(--font-sans); }
+  .wrap { padding: 1.5rem 0; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 8px 18px; border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-secondary);
+    color: var(--color-text-secondary);
+    font-size: 14px; font-weight: 400; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab-btn.active {
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-primary);
+    font-weight: 500;
+  }
+  .tab-btn:hover:not(.active) { background: var(--color-background-primary); color: var(--color-text-primary); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
+  .card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem 1.25rem;
+  }
+  .card-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 6px; }
+  .card-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .card-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+  .badge {
+    display: inline-block;
+    font-size: 11px; font-weight: 500;
+    padding: 3px 10px; border-radius: var(--border-radius-md);
+    margin-bottom: 8px;
+  }
+  .badge-tech { background: var(--color-background-info); color: var(--color-text-info); }
+  .badge-ops  { background: #EAF3DE; color: #3B6D11; }
+  .badge-sales { background: #FAEEDA; color: #854F0B; }
+
+  .section-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin: 1.25rem 0 0.6rem; }
+
+  /* Scoring table */
+  .score-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 1rem; }
+  .score-table th { text-align: left; font-weight: 500; font-size: 12px; color: var(--color-text-secondary); padding: 6px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .score-table td { padding: 8px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); vertical-align: top; }
+  .score-table tr:last-child td { border-bottom: none; }
+  .score-range {
+    display: inline-block; font-size: 12px; font-weight: 500;
+    padding: 2px 8px; border-radius: 4px;
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+  }
+
+  /* Key questions */
+  .q-list { list-style: none; margin: 0; padding: 0; }
+  .q-list li {
+    font-size: 13px; color: var(--color-text-secondary);
+    padding: 7px 0 7px 20px;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    position: relative; line-height: 1.5;
+  }
+  .q-list li:last-child { border-bottom: none; }
+  .q-list li::before { content: "?"; position: absolute; left: 0; color: var(--color-text-tertiary); font-weight: 500; }
+
+  /* Grade band */
+  .grade-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .grade-pill {
+    padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;
+    border: 0.5px solid var(--color-border-secondary);
+    color: var(--color-text-primary);
+    background: var(--color-background-secondary);
+  }
+  .grade-pill.highlight { background: var(--color-background-info); color: var(--color-text-info); border-color: transparent; }
+
+  /* Measurement strip */
+  .measure-strip { display: flex; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .measure-item {
+    flex: 1; min-width: 130px;
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 10px 12px;
+    font-size: 12px; color: var(--color-text-secondary);
+  }
+  .measure-item strong { display: block; font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px; }
+
+  /* Hybrid note */
+  .note-box {
+    border-left: 3px solid var(--color-border-info);
+    padding: 10px 14px;
+    background: var(--color-background-secondary);
+    border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+    font-size: 13px; color: var(--color-text-secondary);
+    margin-bottom: 1rem; line-height: 1.6;
+  }
+  .note-box strong { color: var(--color-text-primary); }
+</style>
+
+<div class="wrap">
+  <h2 class="sr-only">Job Analysis and Job Evaluation Framework split by Technical, Operational, and Sales categories</h2>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="show('overview')">Overview</button>
+    <button class="tab-btn" onclick="show('technical')">Technical</button>
+    <button class="tab-btn" onclick="show('operational')">Operational</button>
+    <button class="tab-btn" onclick="show('sales')">Sales</button>
+    <button class="tab-btn" onclick="show('scoring')">JE Scoring guide</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div id="panel-overview" class="panel active">
+    <div class="note-box">
+      <strong>How to use this framework:</strong> Each role must first be classified into a category (Technical, Operational, or Sales) before Job Evaluation scoring. The category determines which measurement lens to apply and which grade band is most likely.
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <span class="badge badge-tech">Technical</span>
+        <div class="card-title">Specialist / Expert roles</div>
+        <div class="card-body">Roles where the primary value is domain expertise, solution design, or system architecture. Measured by solution quality and knowledge depth.</div>
+      </div>
+      <div class="card">
+        <span class="badge badge-ops">Operational</span>
+        <div class="card-title">Process / Delivery roles</div>
+        <div class="card-body">Roles that ensure consistent execution, compliance, and process excellence. Measured by throughput, accuracy, and SLA adherence.</div>
+      </div>
+      <div class="card">
+        <span class="badge badge-sales">Sales</span>
+        <div class="card-title">Revenue / Client roles</div>
+        <div class="card-body">Roles that directly influence pipeline, conversion, or revenue. Measured by win rate, deal size, and pipeline contribution.</div>
+      </div>
+    </div>
+
+    <p class="section-title">Classification decision tree</p>
+    <table class="score-table">
+      <thead><tr><th>Ask this</th><th>If yes → category</th><th>If no → try next</th></tr></thead>
+      <tbody>
+        <tr><td>Does the role own or design a technical solution?</td><td><span class="badge badge-tech">Technical</span></td><td>Continue</td></tr>
+        <tr><td>Does the role directly own revenue, win rate, or a client relationship?</td><td><span class="badge badge-sales">Sales</span></td><td>Continue</td></tr>
+        <tr><td>Is the primary output process adherence, delivery, or coordination?</td><td><span class="badge badge-ops">Operational</span></td><td>Re-examine scope</td></tr>
+      </tbody>
+    </table>
+
+    <p class="section-title">Hybrid roles (e.g. Solutions Presales)</p>
+    <div class="note-box">
+      Some roles span two categories. For a hybrid, assign the <strong>primary category</strong> based on where 60%+ of the role's accountability sits, then note the secondary category as context. This affects the grade anchor point.
+    </div>
+    <div class="grade-row">
+      <span class="grade-pill">70% Technical + 30% Sales → anchor on Technical track</span>
+      <span class="grade-pill highlight">Grade: C4–D1 likely</span>
+    </div>
+  </div>
+
+  <!-- TECHNICAL -->
+  <div id="panel-technical" class="panel">
+    <span class="badge badge-tech">Technical track</span>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-label">Typical roles</div>
+        <div class="card-body">Solutions Architect, Data Engineer, Presales Specialist, Cloud Consultant, AI/ML Engineer, Principal Engineer</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Primary output</div>
+        <div class="card-body">Technical solution design, feasibility assessments, architecture proposals, RFP/RFI responses, technical enablement</div>
+      </div>
+    </div>
+
+    <p class="section-title">Measurement criteria</p>
+    <div class="measure-strip">
+      <div class="measure-item"><strong>Solution quality</strong> Proposal accuracy & feasibility rate</div>
+      <div class="measure-item"><strong>Time to solution</strong> Avg days from brief to proposal</div>
+      <div class="measure-item"><strong>Partner alignment</strong> % proposals aligned to partner specs (e.g. Microsoft)</div>
+      <div class="measure-item"><strong>Enablement reach</strong> No. of sales staff technically enabled per quarter</div>
+      <div class="measure-item"><strong>Rework rate</strong> % proposals requiring major revision</div>
+    </div>
+
+    <p class="section-title">JE scoring — Technical roles</p>
+    <table class="score-table">
+      <thead><tr><th>Criteria</th><th>What to look for</th><th>Expected range</th></tr></thead>
+      <tbody>
+        <tr><td>Scope & impact</td><td>Does the role own end-to-end solutions or just components?</td><td><span class="score-range">3–4</span></td></tr>
+        <tr><td>Complexity</td><td>Multi-domain (data + cloud + AI)? Ambiguous briefs?</td><td><span class="score-range">4–5</span></td></tr>
+        <tr><td>Autonomy</td><td>Makes design decisions independently, or requires sign-off?</td><td><span class="score-range">3–4</span></td></tr>
+        <tr><td>Stakeholder</td><td>Interfaces with external clients and partners directly?</td><td><span class="score-range">3–4</span></td></tr>
+        <tr><td>Expertise</td><td>Specialized domain knowledge (e.g. data architecture, cloud)?</td><td><span class="score-range">4–5</span></td></tr>
+      </tbody>
+    </table>
+
+    <p class="section-title">Key questions for Hiring Manager</p>
+    <ul class="q-list">
+      <li>Is this role the final technical authority, or does a senior architect review the design?</li>
+      <li>Does the role need to translate client business needs into architecture independently?</li>
+      <li>Are the technical domains genuinely integrated (e.g. data pipelines + cloud + analytics), or siloed?</li>
+      <li>What happens to the solution if this person is unavailable — is there a backup or does delivery stop?</li>
+    </ul>
+  </div>
+
+  <!-- OPERATIONAL -->
+  <div id="panel-operational" class="panel">
+    <span class="badge badge-ops">Operational track</span>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-label">Typical roles</div>
+        <div class="card-body">Project Manager, Delivery Lead, Operations Analyst, Bid Manager, Process Owner, Service Delivery Manager</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Primary output</div>
+        <div class="card-body">On-time delivery, process compliance, SLA adherence, bid coordination, resource scheduling, reporting accuracy</div>
+      </div>
+    </div>
+
+    <p class="section-title">Measurement criteria</p>
+    <div class="measure-strip">
+      <div class="measure-item"><strong>On-time delivery</strong> % milestones or submissions on schedule</div>
+      <div class="measure-item"><strong>SLA adherence</strong> % incidents or requests resolved within SLA</div>
+      <div class="measure-item"><strong>Process compliance</strong> Audit pass rate or error rate</div>
+      <div class="measure-item"><strong>Bid throughput</strong> No. of RFP/RFI submissions per quarter</div>
+      <div class="measure-item"><strong>Coordination span</strong> No. of stakeholders or teams managed</div>
+    </div>
+
+    <p class="section-title">JE scoring — Operational roles</p>
+    <table class="score-table">
+      <thead><tr><th>Criteria</th><th>What to look for</th><th>Expected range</th></tr></thead>
+      <tbody>
+        <tr><td>Scope & impact</td><td>Single project vs. programme vs. org-wide process?</td><td><span class="score-range">2–4</span></td></tr>
+        <tr><td>Complexity</td><td>Multi-team coordination? Tight deadlines + compliance?</td><td><span class="score-range">3–4</span></td></tr>
+        <tr><td>Autonomy</td><td>Sets own priorities, or executes against a defined plan?</td><td><span class="score-range">2–3</span></td></tr>
+        <tr><td>Stakeholder</td><td>Internal only, or includes external clients/vendors?</td><td><span class="score-range">2–4</span></td></tr>
+        <tr><td>Expertise</td><td>Methodology (e.g. PMP, ITIL) vs. general coordination?</td><td><span class="score-range">2–3</span></td></tr>
+      </tbody>
+    </table>
+
+    <p class="section-title">Key questions for Hiring Manager</p>
+    <ul class="q-list">
+      <li>Does this role set the process, or follow an existing one?</li>
+      <li>What is the consequence of a missed deadline — client penalty, revenue impact, or internal only?</li>
+      <li>Does the role manage a team, coordinate peers, or do both?</li>
+      <li>Is this role accountable for budget or just schedule?</li>
+    </ul>
+  </div>
+
+  <!-- SALES -->
+  <div id="panel-sales" class="panel">
+    <span class="badge badge-sales">Sales track</span>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-label">Typical roles</div>
+        <div class="card-body">Account Executive, Business Development Manager, Presales Consultant, Solution Sales Specialist, Channel Partner Manager</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Primary output</div>
+        <div class="card-body">Pipeline generation, deal closure, win rate improvement, revenue contribution, client acquisition or retention</div>
+      </div>
+    </div>
+
+    <p class="section-title">Measurement criteria</p>
+    <div class="measure-strip">
+      <div class="measure-item"><strong>Win rate</strong> Deals won / deals supported (%)</div>
+      <div class="measure-item"><strong>Pipeline supported</strong> Total value of deals the role touched</div>
+      <div class="measure-item"><strong>Deal conversion</strong> Qualified leads → closed (by stage)</div>
+      <div class="measure-item"><strong>Revenue attribution</strong> Direct or influenced revenue per period</div>
+      <div class="measure-item"><strong>Time to close</strong> Avg days from opportunity to signed deal</div>
+    </div>
+
+    <p class="section-title">JE scoring — Sales roles</p>
+    <table class="score-table">
+      <thead><tr><th>Criteria</th><th>What to look for</th><th>Expected range</th></tr></thead>
+      <tbody>
+        <tr><td>Scope & impact</td><td>Owns revenue target vs. supports a quota-carrier?</td><td><span class="score-range">3–5</span></td></tr>
+        <tr><td>Complexity</td><td>Complex solution sales vs. transactional / product-led?</td><td><span class="score-range">3–4</span></td></tr>
+        <tr><td>Autonomy</td><td>Self-generates pipeline, or responds to inbound only?</td><td><span class="score-range">3–4</span></td></tr>
+        <tr><td>Stakeholder</td><td>C-suite client engagement vs. mid-level only?</td><td><span class="score-range">3–5</span></td></tr>
+        <tr><td>Expertise</td><td>Deep domain (e.g. data, cloud) required to sell?</td><td><span class="score-range">3–4</span></td></tr>
+      </tbody>
+    </table>
+
+    <p class="section-title">Key questions for Hiring Manager</p>
+    <ul class="q-list">
+      <li>Does this role own a revenue number, or is revenue a by-product of another metric (e.g. technical win rate)?</li>
+      <li>Who is the deal owner when this role is involved — this person, or an Account Executive?</li>
+      <li>Is the role expected to generate its own pipeline, or work on leads passed by marketing or sales?</li>
+      <li>What is the client seniority typically engaged — economic buyer, technical buyer, or both?</li>
+    </ul>
+  </div>
+
+  <!-- SCORING GUIDE -->
+  <div id="panel-scoring" class="panel">
+    <p class="section-title" style="margin-top:0">Universal JE scoring scale</p>
+    <table class="score-table">
+      <thead><tr><th>Score</th><th>Scope & autonomy</th><th>Complexity</th><th>Stakeholder</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1–2</strong></td><td>Follows defined instructions; narrow scope</td><td>Routine, predictable tasks</td><td>Internal team only</td></tr>
+        <tr><td><strong>3</strong></td><td>Works independently within guidelines; functional scope</td><td>Some ambiguity; multi-step problem solving</td><td>Cross-functional internal</td></tr>
+        <tr><td><strong>4</strong></td><td>Sets own priorities; influences beyond direct team</td><td>High ambiguity; integrates multiple domains</td><td>External clients or partners</td></tr>
+        <tr><td><strong>5</strong></td><td>Defines strategy; org-level accountability</td><td>Novel, unstructured challenges; sets standards</td><td>C-suite or board; strategic partner</td></tr>
+      </tbody>
+    </table>
+
+    <p class="section-title">Grade band mapping</p>
+    <table class="score-table">
+      <thead><tr><th>Total JE score</th><th>Indicative grade</th><th>Profile</th></tr></thead>
+      <tbody>
+        <tr><td>10–13</td><td><span class="grade-pill">B2–B3</span></td><td>Senior Analyst / Specialist (developing)</td></tr>
+        <tr><td>14–16</td><td><span class="grade-pill">C1–C3</span></td><td>Senior Specialist / Lead Analyst</td></tr>
+        <tr><td>17–19</td><td><span class="grade-pill highlight">C4–C5</span></td><td>Principal Specialist / Senior Lead (e.g. Solutions Presales)</td></tr>
+        <tr><td>20–21</td><td><span class="grade-pill">D1</span></td><td>Manager / Senior Principal (team accountability)</td></tr>
+        <tr><td>22+</td><td><span class="grade-pill">D2–D3</span></td><td>Senior Manager / Director</td></tr>
+      </tbody>
+    </table>
+
+    <p class="section-title">The grading question for hybrid roles</p>
+    <div class="note-box">
+      <strong>Accountability vs. guidance</strong> — before finalising a grade, ask: is this role accountable for team outcomes (→ D-level / Manager), or does it guide others while remaining individually accountable (→ C-level / Senior Specialist)? Getting this wrong shifts the grade band by one full level.
+    </div>
+    <button onclick="sendPrompt('Score the Solutions Presales Specialist role using the JE framework')" style="font-size:13px;padding:8px 16px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary);cursor:pointer;">Score the Solutions Presales role ↗</button>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>

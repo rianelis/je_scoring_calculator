@@ -6,31 +6,43 @@
   <title>JE Scoring Calculator</title>
   <style>
     :root {
-      --color-text-primary: #172033;
-      --color-text-secondary: #526070;
-      --color-text-tertiary: #7b8794;
-      --color-text-info: #0f4c81;
+      --brand-navy: #06377b;
+      --brand-blue: #0066b3;
+      --brand-cyan: #0095da;
+      --brand-sky: #8dd8f8;
+      --brand-ink: #10233f;
+      --color-text-primary: #142238;
+      --color-text-secondary: #526276;
+      --color-text-tertiary: #7f8da0;
+      --color-text-info: var(--brand-navy);
       --color-background-primary: #ffffff;
-      --color-background-secondary: #f5f7fa;
-      --color-background-info: #e7f1fb;
-      --color-border-secondary: #cbd5e1;
-      --color-border-tertiary: #e2e8f0;
-      --color-border-info: #4f8fcf;
+      --color-background-secondary: #f3f8fc;
+      --color-background-info: #e7f6fd;
+      --color-border-secondary: #b9d3e8;
+      --color-border-tertiary: #dbeaf4;
+      --color-border-info: var(--brand-cyan);
       --border-radius-md: 6px;
       --border-radius-lg: 8px;
+      --shadow-panel: 0 18px 46px rgba(6, 55, 123, 0.12);
     }
 
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      background: #f8fafc;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(141, 216, 248, 0.36), transparent 30%),
+        linear-gradient(180deg, #eef8fd 0%, #f8fbfd 36%, #ffffff 100%);
       color: var(--color-text-primary);
-      font-family: "Segoe UI", Arial, sans-serif;
+      font-family: "Segoe UI", "Aptos", Arial, sans-serif;
+      min-height: 100vh;
     }
     h1 {
-      font-size: 22px;
-      font-weight: 600;
-      margin: 0 0 18px;
+      color: #ffffff;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.12;
+      margin: 0;
     }
     h2.sr-only {
       position: absolute;
@@ -40,14 +52,76 @@
       clip: rect(0, 0, 0, 0);
     }
     .page {
-      max-width: 920px;
+      max-width: 980px;
       margin: 0 auto;
       padding: 24px;
+    }
+    .brand-header {
+      align-items: flex-end;
+      background:
+        linear-gradient(135deg, rgba(6, 55, 123, 0.98) 0%, rgba(0, 102, 179, 0.95) 56%, rgba(0, 149, 218, 0.92) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      border-radius: 14px;
+      box-shadow: var(--shadow-panel);
+      display: flex;
+      gap: 18px;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      overflow: hidden;
+      padding: 22px 24px;
+      position: relative;
+    }
+    .brand-header::after {
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.22) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
+      background-size: 28px 28px;
+      content: "";
+      inset: 0;
+      opacity: 0.18;
+      pointer-events: none;
+      position: absolute;
+    }
+    .brand-copy,
+    .brand-mark {
+      position: relative;
+      z-index: 1;
+    }
+    .brand-kicker {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+    }
+    .brand-subtitle {
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 13px;
+      line-height: 1.45;
+      margin-top: 8px;
+      max-width: 590px;
+    }
+    .brand-mark {
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      border-radius: 10px;
+      color: #ffffff;
+      display: flex;
+      flex: 0 0 auto;
+      font-size: 12px;
+      font-weight: 800;
+      justify-content: center;
+      letter-spacing: 1.4px;
+      min-height: 42px;
+      padding: 0 14px;
+      text-transform: uppercase;
     }
     .wrap {
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-tertiary);
       border-radius: var(--border-radius-lg);
+      box-shadow: 0 12px 34px rgba(16, 35, 63, 0.07);
       padding: 24px;
     }
     .field-row { margin-bottom: 1.25rem; }
@@ -58,6 +132,7 @@
       margin-bottom: 6px;
     }
     input[type="text"],
+    input[type="email"],
     select {
       width: 100%;
       font-size: 14px;
@@ -66,6 +141,14 @@
       border: 1px solid var(--color-border-secondary);
       background: var(--color-background-primary);
       color: var(--color-text-primary);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    select:focus {
+      border-color: var(--brand-cyan);
+      box-shadow: 0 0 0 3px rgba(0, 149, 218, 0.14);
     }
     .top-grid {
       display: grid;
@@ -80,7 +163,7 @@
       margin-bottom: 1.5rem;
     }
     .criteria-card {
-      background: var(--color-background-primary);
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
       border: 1px solid var(--color-border-tertiary);
       border-radius: var(--border-radius-lg);
       padding: 14px 16px;
@@ -113,9 +196,14 @@
       transition: all 0.12s;
       user-select: none;
     }
+    .pill:hover {
+      border-color: var(--brand-cyan);
+      color: var(--brand-navy);
+    }
     .pill.selected {
-      background: var(--color-background-info);
-      color: var(--color-text-info);
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-cyan));
+      box-shadow: 0 8px 16px rgba(0, 102, 179, 0.18);
+      color: #ffffff;
       border-color: transparent;
       font-weight: 600;
     }
@@ -125,7 +213,9 @@
       margin: 1.5rem 0;
     }
     .result-area {
-      background: var(--color-background-secondary);
+      background:
+        linear-gradient(135deg, rgba(231, 246, 253, 0.95), rgba(255, 255, 255, 0.96));
+      border: 1px solid var(--color-border-tertiary);
       border-radius: var(--border-radius-lg);
       padding: 1.25rem 1.5rem;
       margin-bottom: 1.25rem;
@@ -140,7 +230,7 @@
     .bar-fill {
       height: 100%;
       border-radius: 4px;
-      background: var(--color-border-info);
+      background: linear-gradient(90deg, var(--brand-blue), var(--brand-cyan));
       transition: width 0.4s;
     }
     .bar-labels {
@@ -150,9 +240,9 @@
       color: var(--color-text-tertiary);
     }
     .insight-box {
-      border-left: 3px solid var(--color-border-info);
+      border-left: 3px solid var(--brand-cyan);
       padding: 10px 14px;
-      background: var(--color-background-primary);
+      background: rgba(255, 255, 255, 0.72);
       border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
       font-size: 13px;
       color: var(--color-text-secondary);
@@ -168,6 +258,7 @@
     }
     .metric-card {
       background: var(--color-background-primary);
+      border: 1px solid rgba(185, 211, 232, 0.72);
       border-radius: var(--border-radius-md);
       padding: 10px 12px;
       text-align: center;
@@ -195,6 +286,177 @@
       background: var(--color-background-primary);
       color: var(--color-text-primary);
       cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+    }
+    button:hover {
+      border-color: var(--brand-cyan);
+      color: var(--brand-navy);
+      transform: translateY(-1px);
+    }
+    .app-tabs,
+    .framework-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .app-tab,
+    .framework-tab {
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--color-text-secondary);
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .app-tab.active,
+    .framework-tab.active {
+      background: var(--brand-navy);
+      border-color: var(--brand-navy);
+      color: #ffffff;
+    }
+    .app-tab:hover,
+    .framework-tab:hover {
+      background: #ffffff;
+      border-color: var(--color-border-info);
+      color: var(--color-text-primary);
+    }
+    .app-view,
+    .framework-panel {
+      display: none;
+    }
+    .app-view.active,
+    .framework-panel.active {
+      display: block;
+    }
+    .framework-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .framework-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .framework-card {
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      border: 1px solid var(--color-border-tertiary);
+      border-radius: var(--border-radius-lg);
+      padding: 16px 18px;
+    }
+    .framework-label {
+      color: var(--color-text-secondary);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .framework-title {
+      color: var(--color-text-primary);
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .framework-body {
+      color: var(--color-text-secondary);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .section-title {
+      color: var(--color-text-primary);
+      font-size: 14px;
+      font-weight: 600;
+      margin: 20px 0 10px;
+    }
+    .badge {
+      display: inline-block;
+      border-radius: var(--border-radius-md);
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      padding: 3px 10px;
+    }
+    .badge-tech { background: #e7f6fd; color: var(--brand-navy); }
+    .badge-ops { background: #e9f7ef; color: #1e6b3f; }
+    .badge-sales { background: #fff2dc; color: #92540b; }
+    .guide-table {
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 16px;
+      width: 100%;
+    }
+    .guide-table th {
+      border-bottom: 1px solid var(--color-border-tertiary);
+      color: var(--color-text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 10px;
+      text-align: left;
+    }
+    .guide-table td {
+      border-bottom: 1px solid var(--color-border-tertiary);
+      padding: 9px 10px;
+      vertical-align: top;
+    }
+    .guide-table tr:last-child td {
+      border-bottom: 0;
+    }
+    .score-range,
+    .grade-pill {
+      background: var(--color-background-secondary);
+      border-radius: var(--border-radius-md);
+      color: var(--color-text-primary);
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 9px;
+    }
+    .grade-row,
+    .measure-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .grade-pill.highlight {
+      background: #e7f6fd;
+      color: var(--brand-navy);
+    }
+    .measure-item {
+      background: var(--color-background-secondary);
+      border-radius: var(--border-radius-md);
+      color: var(--color-text-secondary);
+      flex: 1;
+      font-size: 12px;
+      min-width: 135px;
+      padding: 10px 12px;
+    }
+    .measure-item strong {
+      color: var(--color-text-primary);
+      display: block;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+    .q-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .q-list li {
+      border-bottom: 1px solid var(--color-border-tertiary);
+      color: var(--color-text-secondary);
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 8px 0 8px 22px;
+      position: relative;
+    }
+    .q-list li::before {
+      color: var(--color-text-tertiary);
+      content: "?";
+      font-weight: 600;
+      left: 0;
+      position: absolute;
+    }
+    .q-list li:last-child {
+      border-bottom: 0;
     }
 
     @media print {
@@ -207,7 +469,15 @@
       }
       .wrap {
         border: 0;
+        box-shadow: none;
         padding: 0;
+      }
+      .brand-header {
+        box-shadow: none;
+      }
+      .app-tabs,
+      .framework-tabs {
+        display: none;
       }
       .action-row {
         display: none;
@@ -228,10 +498,18 @@
 
     @media (max-width: 720px) {
       .page { padding: 12px; }
+      .brand-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 18px;
+      }
+      h1 { font-size: 23px; }
       .wrap { padding: 16px; }
       .top-grid,
       .criteria-grid,
-      .metric-row {
+      .metric-row,
+      .framework-grid-2,
+      .framework-grid-3 {
         grid-template-columns: 1fr;
       }
     }
@@ -239,8 +517,19 @@
 </head>
 <body>
   <main class="page">
-    <h1>JE Scoring Calculator</h1>
-    <div class="wrap">
+    <header class="brand-header">
+      <div class="brand-copy">
+        <div class="brand-kicker">Enfrasys HR calibration</div>
+        <h1>JE Scoring Calculator</h1>
+        <div class="brand-subtitle">Role classification, scoring guidance, and grade-band recommendations for consistent job evaluation.</div>
+      </div>
+      <div class="brand-mark">ENFRASYS</div>
+    </header>
+    <div class="app-tabs" role="tablist" aria-label="JE app sections">
+      <button class="app-tab active" id="tab-calculator" type="button" onclick="switchAppView('calculator')">Calculator</button>
+      <button class="app-tab" id="tab-framework" type="button" onclick="switchAppView('framework')">JA/JE Framework</button>
+    </div>
+    <div class="wrap app-view active" id="view-calculator">
       <h2 class="sr-only">JE scoring calculator - enter role details and criteria scores to get a grade recommendation</h2>
 
       <div class="field-row">
@@ -292,6 +581,220 @@
         <button id="btn-email" onclick="emailResult()">Email result</button>
       </div>
     </div>
+
+    <div class="wrap app-view" id="view-framework">
+      <h2 class="sr-only">Job Analysis and Job Evaluation framework split by Technical, Operational, and Sales categories</h2>
+
+      <div class="framework-tabs" role="tablist" aria-label="Framework sections">
+        <button class="framework-tab active" type="button" onclick="showFrameworkPanel('overview', this)">Overview</button>
+        <button class="framework-tab" type="button" onclick="showFrameworkPanel('technical', this)">Technical</button>
+        <button class="framework-tab" type="button" onclick="showFrameworkPanel('operational', this)">Operational</button>
+        <button class="framework-tab" type="button" onclick="showFrameworkPanel('sales', this)">Sales</button>
+        <button class="framework-tab" type="button" onclick="showFrameworkPanel('scoring', this)">Scoring guide</button>
+      </div>
+
+      <section id="framework-overview" class="framework-panel active">
+        <div class="insight-box">
+          <strong>How to use this framework:</strong> Classify each role before scoring. The category determines the measurement lens and the likely grade anchor.
+        </div>
+        <div class="framework-grid-3">
+          <div class="framework-card">
+            <span class="badge badge-tech">Technical</span>
+            <div class="framework-title">Specialist / Expert roles</div>
+            <div class="framework-body">Roles where the primary value is domain expertise, solution design, or system architecture. Measure by solution quality and knowledge depth.</div>
+          </div>
+          <div class="framework-card">
+            <span class="badge badge-ops">Operational</span>
+            <div class="framework-title">Process / Delivery roles</div>
+            <div class="framework-body">Roles that ensure consistent execution, compliance, and process excellence. Measure by throughput, accuracy, and SLA adherence.</div>
+          </div>
+          <div class="framework-card">
+            <span class="badge badge-sales">Sales</span>
+            <div class="framework-title">Revenue / Client roles</div>
+            <div class="framework-body">Roles that directly influence pipeline, conversion, or revenue. Measure by win rate, deal size, and pipeline contribution.</div>
+          </div>
+        </div>
+
+        <p class="section-title">Classification decision tree</p>
+        <table class="guide-table">
+          <thead><tr><th>Ask this</th><th>If yes</th><th>If no</th></tr></thead>
+          <tbody>
+            <tr><td>Does the role own or design a technical solution?</td><td><span class="badge badge-tech">Technical</span></td><td>Continue</td></tr>
+            <tr><td>Does the role directly own revenue, win rate, or a client relationship?</td><td><span class="badge badge-sales">Sales</span></td><td>Continue</td></tr>
+            <tr><td>Is the primary output process adherence, delivery, or coordination?</td><td><span class="badge badge-ops">Operational</span></td><td>Re-examine scope</td></tr>
+          </tbody>
+        </table>
+
+        <p class="section-title">Hybrid roles</p>
+        <div class="insight-box">
+          For a hybrid role, assign the primary category based on where 60% or more of accountability sits, then note the secondary category as context.
+        </div>
+        <div class="grade-row">
+          <span class="grade-pill">70% Technical + 30% Sales -> Technical anchor</span>
+          <span class="grade-pill highlight">C4-C5 or D1 likely</span>
+        </div>
+      </section>
+
+      <section id="framework-technical" class="framework-panel">
+        <span class="badge badge-tech">Technical track</span>
+        <div class="framework-grid-2">
+          <div class="framework-card">
+            <div class="framework-label">Typical roles</div>
+            <div class="framework-body">Solutions Architect, Data Engineer, Presales Specialist, Cloud Consultant, AI/ML Engineer, Principal Engineer</div>
+          </div>
+          <div class="framework-card">
+            <div class="framework-label">Primary output</div>
+            <div class="framework-body">Technical solution design, feasibility assessments, architecture proposals, RFP/RFI responses, technical enablement</div>
+          </div>
+        </div>
+
+        <p class="section-title">Measurement criteria</p>
+        <div class="measure-strip">
+          <div class="measure-item"><strong>Solution quality</strong> Proposal accuracy and feasibility rate</div>
+          <div class="measure-item"><strong>Time to solution</strong> Average days from brief to proposal</div>
+          <div class="measure-item"><strong>Partner alignment</strong> Proposals aligned to partner specs</div>
+          <div class="measure-item"><strong>Enablement reach</strong> Sales staff technically enabled per quarter</div>
+          <div class="measure-item"><strong>Rework rate</strong> Proposals requiring major revision</div>
+        </div>
+
+        <p class="section-title">JE scoring - Technical roles</p>
+        <table class="guide-table">
+          <thead><tr><th>Criteria</th><th>What to look for</th><th>Expected range</th></tr></thead>
+          <tbody>
+            <tr><td>Scope & impact</td><td>Does the role own end-to-end solutions or just components?</td><td><span class="score-range">3-4</span></td></tr>
+            <tr><td>Complexity</td><td>Multi-domain work such as data, cloud, and AI? Ambiguous briefs?</td><td><span class="score-range">4-5</span></td></tr>
+            <tr><td>Autonomy</td><td>Makes design decisions independently, or requires sign-off?</td><td><span class="score-range">3-4</span></td></tr>
+            <tr><td>Stakeholder</td><td>Interfaces with external clients and partners directly?</td><td><span class="score-range">3-4</span></td></tr>
+            <tr><td>Expertise</td><td>Specialized domain knowledge such as data architecture or cloud?</td><td><span class="score-range">4-5</span></td></tr>
+          </tbody>
+        </table>
+
+        <p class="section-title">Key questions for Hiring Manager</p>
+        <ul class="q-list">
+          <li>Is this role the final technical authority, or does a senior architect review the design?</li>
+          <li>Does the role translate client business needs into architecture independently?</li>
+          <li>Are the technical domains genuinely integrated, or siloed?</li>
+          <li>What happens if this person is unavailable: is there a backup or does delivery stop?</li>
+        </ul>
+      </section>
+
+      <section id="framework-operational" class="framework-panel">
+        <span class="badge badge-ops">Operational track</span>
+        <div class="framework-grid-2">
+          <div class="framework-card">
+            <div class="framework-label">Typical roles</div>
+            <div class="framework-body">Project Manager, Delivery Lead, Operations Analyst, Bid Manager, Process Owner, Service Delivery Manager</div>
+          </div>
+          <div class="framework-card">
+            <div class="framework-label">Primary output</div>
+            <div class="framework-body">On-time delivery, process compliance, SLA adherence, bid coordination, resource scheduling, reporting accuracy</div>
+          </div>
+        </div>
+
+        <p class="section-title">Measurement criteria</p>
+        <div class="measure-strip">
+          <div class="measure-item"><strong>On-time delivery</strong> Milestones or submissions on schedule</div>
+          <div class="measure-item"><strong>SLA adherence</strong> Requests resolved within SLA</div>
+          <div class="measure-item"><strong>Process compliance</strong> Audit pass rate or error rate</div>
+          <div class="measure-item"><strong>Bid throughput</strong> RFP/RFI submissions per quarter</div>
+          <div class="measure-item"><strong>Coordination span</strong> Stakeholders or teams managed</div>
+        </div>
+
+        <p class="section-title">JE scoring - Operational roles</p>
+        <table class="guide-table">
+          <thead><tr><th>Criteria</th><th>What to look for</th><th>Expected range</th></tr></thead>
+          <tbody>
+            <tr><td>Scope & impact</td><td>Single project vs. programme vs. org-wide process?</td><td><span class="score-range">2-4</span></td></tr>
+            <tr><td>Complexity</td><td>Multi-team coordination? Tight deadlines plus compliance?</td><td><span class="score-range">3-4</span></td></tr>
+            <tr><td>Autonomy</td><td>Sets own priorities, or executes against a defined plan?</td><td><span class="score-range">2-3</span></td></tr>
+            <tr><td>Stakeholder</td><td>Internal only, or includes external clients/vendors?</td><td><span class="score-range">2-4</span></td></tr>
+            <tr><td>Expertise</td><td>Methodology such as PMP or ITIL vs. general coordination?</td><td><span class="score-range">2-3</span></td></tr>
+          </tbody>
+        </table>
+
+        <p class="section-title">Key questions for Hiring Manager</p>
+        <ul class="q-list">
+          <li>Does this role set the process, or follow an existing one?</li>
+          <li>What is the consequence of a missed deadline: client penalty, revenue impact, or internal only?</li>
+          <li>Does the role manage a team, coordinate peers, or do both?</li>
+          <li>Is this role accountable for budget or just schedule?</li>
+        </ul>
+      </section>
+
+      <section id="framework-sales" class="framework-panel">
+        <span class="badge badge-sales">Sales track</span>
+        <div class="framework-grid-2">
+          <div class="framework-card">
+            <div class="framework-label">Typical roles</div>
+            <div class="framework-body">Account Executive, Business Development Manager, Presales Consultant, Solution Sales Specialist, Channel Partner Manager</div>
+          </div>
+          <div class="framework-card">
+            <div class="framework-label">Primary output</div>
+            <div class="framework-body">Pipeline generation, deal closure, win rate improvement, revenue contribution, client acquisition or retention</div>
+          </div>
+        </div>
+
+        <p class="section-title">Measurement criteria</p>
+        <div class="measure-strip">
+          <div class="measure-item"><strong>Win rate</strong> Deals won / deals supported</div>
+          <div class="measure-item"><strong>Pipeline supported</strong> Total value of deals touched</div>
+          <div class="measure-item"><strong>Deal conversion</strong> Qualified leads to closed deals</div>
+          <div class="measure-item"><strong>Revenue attribution</strong> Direct or influenced revenue</div>
+          <div class="measure-item"><strong>Time to close</strong> Average days from opportunity to signed deal</div>
+        </div>
+
+        <p class="section-title">JE scoring - Sales roles</p>
+        <table class="guide-table">
+          <thead><tr><th>Criteria</th><th>What to look for</th><th>Expected range</th></tr></thead>
+          <tbody>
+            <tr><td>Scope & impact</td><td>Owns revenue target vs. supports a quota-carrier?</td><td><span class="score-range">3-5</span></td></tr>
+            <tr><td>Complexity</td><td>Complex solution sales vs. transactional or product-led?</td><td><span class="score-range">3-4</span></td></tr>
+            <tr><td>Autonomy</td><td>Self-generates pipeline, or responds to inbound only?</td><td><span class="score-range">3-4</span></td></tr>
+            <tr><td>Stakeholder</td><td>C-suite client engagement vs. mid-level only?</td><td><span class="score-range">3-5</span></td></tr>
+            <tr><td>Expertise</td><td>Deep domain such as data or cloud required to sell?</td><td><span class="score-range">3-4</span></td></tr>
+          </tbody>
+        </table>
+
+        <p class="section-title">Key questions for Hiring Manager</p>
+        <ul class="q-list">
+          <li>Does this role own a revenue number, or is revenue a by-product of another metric?</li>
+          <li>Who is the deal owner when this role is involved: this person, or an Account Executive?</li>
+          <li>Is the role expected to generate its own pipeline, or work on leads passed by marketing or sales?</li>
+          <li>What is the client seniority typically engaged: economic buyer, technical buyer, or both?</li>
+        </ul>
+      </section>
+
+      <section id="framework-scoring" class="framework-panel">
+        <p class="section-title" style="margin-top:0">Universal JE scoring scale</p>
+        <table class="guide-table">
+          <thead><tr><th>Score</th><th>Scope & autonomy</th><th>Complexity</th><th>Stakeholder</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1-2</strong></td><td>Follows defined instructions; narrow scope</td><td>Routine, predictable tasks</td><td>Internal team only</td></tr>
+            <tr><td><strong>3</strong></td><td>Works independently within guidelines; functional scope</td><td>Some ambiguity; multi-step problem solving</td><td>Cross-functional internal</td></tr>
+            <tr><td><strong>4</strong></td><td>Sets own priorities; influences beyond direct team</td><td>High ambiguity; integrates multiple domains</td><td>External clients or partners</td></tr>
+            <tr><td><strong>5</strong></td><td>Defines strategy; org-level accountability</td><td>Novel, unstructured challenges; sets standards</td><td>C-suite or strategic partner</td></tr>
+          </tbody>
+        </table>
+
+        <p class="section-title">Grade band mapping</p>
+        <table class="guide-table">
+          <thead><tr><th>Total JE score</th><th>Indicative grade</th><th>Profile</th></tr></thead>
+          <tbody>
+            <tr><td>5-9</td><td><span class="grade-pill">B1-B2</span></td><td>Analyst / Junior Specialist</td></tr>
+            <tr><td>10-13</td><td><span class="grade-pill">B3-C1</span></td><td>Senior Analyst / Specialist</td></tr>
+            <tr><td>14-16</td><td><span class="grade-pill">C2-C3</span></td><td>Senior Specialist / Lead</td></tr>
+            <tr><td>17-19</td><td><span class="grade-pill highlight">C4-C5</span></td><td>Principal Specialist / Senior Lead</td></tr>
+            <tr><td>20-21</td><td><span class="grade-pill">D1</span></td><td>Manager / Senior Principal</td></tr>
+            <tr><td>22-25</td><td><span class="grade-pill">D2-D3</span></td><td>Senior Manager / Director</td></tr>
+          </tbody>
+        </table>
+
+        <p class="section-title">The grading question for hybrid roles</p>
+        <div class="insight-box">
+          <strong>Accountability vs. guidance:</strong> before finalising a grade, ask whether this role is accountable for team outcomes, or guides others while remaining individually accountable. Getting this wrong can shift the grade band by one full level.
+        </div>
+      </section>
+    </div>
   </main>
 
   <script>
@@ -314,6 +817,20 @@
 
     const scores = {};
     let latestResult = null;
+
+    function switchAppView(id) {
+      document.querySelectorAll(".app-view").forEach(view => view.classList.remove("active"));
+      document.querySelectorAll(".app-tab").forEach(tab => tab.classList.remove("active"));
+      document.getElementById("view-" + id).classList.add("active");
+      document.getElementById("tab-" + id).classList.add("active");
+    }
+
+    function showFrameworkPanel(id, tab) {
+      document.querySelectorAll(".framework-panel").forEach(panel => panel.classList.remove("active"));
+      document.querySelectorAll(".framework-tab").forEach(item => item.classList.remove("active"));
+      document.getElementById("framework-" + id).classList.add("active");
+      tab.classList.add("active");
+    }
 
     function buildGrid() {
       const g = document.getElementById("criteria-grid");
