@@ -248,6 +248,11 @@
         <input type="text" id="role-title" placeholder="e.g. Solutions Presales Specialist" oninput="calc()">
       </div>
 
+      <div class="field-row">
+        <div class="field-label">Recipient email</div>
+        <input type="email" id="recipient-email" placeholder="e.g. hr@example.com">
+      </div>
+
       <div class="top-grid">
         <div class="field-row" style="margin-bottom:0">
           <div class="field-label">Category</div>
@@ -284,6 +289,7 @@
       <div class="action-row">
         <button onclick="resetAll()">Reset</button>
         <button onclick="printResult()">Print / Save PDF</button>
+        <button id="btn-email" style="display:none" onclick="emailResult()">Email result</button>
       </div>
     </div>
   </main>
@@ -307,6 +313,7 @@
     ];
 
     const scores = {};
+    let latestResult = null;
 
     function buildGrid() {
       const g = document.getElementById("criteria-grid");
@@ -342,10 +349,13 @@
       const count = scored.length;
       const category = document.getElementById("category").value;
       const team = document.getElementById("team").value;
+      const title = document.getElementById("role-title").value.trim() || "Untitled role";
 
       const ra = document.getElementById("result-area");
       if (count < 3) {
         ra.innerHTML = `<div style="font-size:13px;color:var(--color-text-secondary)">Score at least 3 criteria to see a result (${count}/5 scored)</div>`;
+        latestResult = null;
+        document.getElementById("btn-email").style.display = "none";
         return;
       }
 
@@ -375,19 +385,71 @@
         ${teamAdj ? `<div class="insight-box" style="margin-top:12px"><strong>Team note:</strong> ${teamAdj}</div>` : ""}
         ${hybridNote ? `<div class="insight-box" style="margin-top:8px"><strong>Hybrid note:</strong> ${hybridNote}</div>` : ""}
       `;
+
+      latestResult = {
+        title,
+        category: category || "-",
+        team: team || "-",
+        projected,
+        grade: grade.grade,
+        profile: grade.profile,
+        criteria: CRITERIA.map(c => `${c.name}: ${scores[c.id] || "n/a"}`),
+        teamAdj,
+        hybridNote
+      };
+      document.getElementById("btn-email").style.display = "inline-block";
     }
 
     function resetAll() {
       CRITERIA.forEach(c => delete scores[c.id]);
       document.getElementById("role-title").value = "";
+      document.getElementById("recipient-email").value = "";
       document.getElementById("category").value = "";
       document.getElementById("team").value = "";
       buildGrid();
       document.getElementById("result-area").innerHTML = '<div style="font-size:13px;color:var(--color-text-secondary)">Score your role above to see results</div>';
+      latestResult = null;
+      document.getElementById("btn-email").style.display = "none";
     }
 
     function printResult() {
       window.print();
+    }
+
+    function emailResult() {
+      if (!latestResult) {
+        alert("Score at least 3 criteria before emailing a result.");
+        return;
+      }
+
+      const recipient = document.getElementById("recipient-email").value.trim();
+      if (!recipient) {
+        alert("Enter a recipient email address first.");
+        return;
+      }
+
+      const notes = [latestResult.teamAdj, latestResult.hybridNote].filter(Boolean);
+      const body = [
+        "JE Scoring Calculator Result",
+        "",
+        `Role title: ${latestResult.title}`,
+        `Category: ${latestResult.category}`,
+        `Team accountability: ${latestResult.team}`,
+        `Total JE score: ${latestResult.projected}`,
+        `Grade band: ${latestResult.grade}`,
+        `Profile: ${latestResult.profile}`,
+        "",
+        "Criteria scores:",
+        ...latestResult.criteria.map(item => `- ${item}`),
+        "",
+        notes.length ? "Notes:" : "",
+        ...notes.map(note => `- ${note}`),
+        "",
+        `Calculator: ${window.location.href}`
+      ].filter(line => line !== "").join("\n");
+
+      const subject = `JE scoring result - ${latestResult.title}`;
+      window.location.href = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
 
     buildGrid();

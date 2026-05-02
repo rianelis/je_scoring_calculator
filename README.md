@@ -47,6 +47,7 @@ The calculator lets users enter role details, score five criteria from 1 to 5, a
 - Team-management note where relevant
 - Hybrid-role note where relevant
 - Print/save-as-PDF export
+- Email-result action using a recipient email input
 
 The scoring questions/criteria are in `hosted/index.html`.
 
@@ -126,4 +127,3 @@ Recommended next improvements:
 - Package as a proper Teams app wrapper if a more native Teams rollout is needed.
 - Add result saving to SharePoint, Dataverse, or a Power Automate endpoint.
 - Re-enable Microsoft Entra sign-in for production if the app contains sensitive HR content.
-
