@@ -905,7 +905,7 @@
       latestResult = {
         title,
         category: category || "-",
-        team: team || "-",
+        team: team ? document.getElementById("team").selectedOptions[0].text : "-",
         projected,
         grade: grade.grade,
         profile: grade.profile,
@@ -943,26 +943,51 @@
       }
 
       const notes = [latestResult.teamAdj, latestResult.hybridNote].filter(Boolean);
+      const generatedAt = new Date().toLocaleString([], {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
       const body = [
-        "JE Scoring Calculator Result",
+        "JE Scoring Calculator - Role Evaluation Summary",
+        "Enfrasys HR Calibration",
         "",
-        `Role title: ${latestResult.title}`,
-        `Category: ${latestResult.category}`,
-        `Team accountability: ${latestResult.team}`,
-        `Total JE score: ${latestResult.projected}`,
-        `Grade band: ${latestResult.grade}`,
-        `Profile: ${latestResult.profile}`,
+        "Hello,",
         "",
-        "Criteria scores:",
+        "Please find the JE scoring summary below for review.",
+        "",
+        "Role details",
+        "------------",
+        `Role title          : ${latestResult.title}`,
+        `Category            : ${latestResult.category}`,
+        `Team accountability : ${latestResult.team}`,
+        `Generated on        : ${generatedAt}`,
+        "",
+        "Recommended outcome",
+        "-------------------",
+        `Total JE score      : ${latestResult.projected}`,
+        `Indicative grade    : ${latestResult.grade}`,
+        `Role profile        : ${latestResult.profile}`,
+        "",
+        "Criteria scores",
+        "---------------",
         ...latestResult.criteria.map(item => `- ${item}`),
         "",
-        notes.length ? "Notes:" : "",
-        ...notes.map(note => `- ${note}`),
+        ...(notes.length ? ["Review notes", "------------", ...notes.map(note => `- ${note}`), ""] : []),
+        "PDF / screenshot note",
+        "---------------------",
+        "To include a PDF copy, use the calculator's Print / Save PDF button, save the result, then attach it to this email before sending.",
         "",
-        `Calculator: ${window.location.href}`
+        "Reference",
+        "---------",
+        `Calculator link: ${window.location.href}`,
+        "",
+        "Note: This output is an indicative HR calibration aid and should be reviewed against the approved JE framework before final grade confirmation."
       ].filter(line => line !== "").join("\n");
 
-      const subject = `JE scoring result - ${latestResult.title}`;
+      const subject = `JE scoring summary | ${latestResult.title} | ${latestResult.grade}`;
       window.location.href = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
 
