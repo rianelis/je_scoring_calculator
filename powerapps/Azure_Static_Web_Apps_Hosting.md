@@ -39,7 +39,7 @@ https://your-app-name.azurestaticapps.net
 In Power Apps, add a button and set `OnSelect` to:
 
 ```powerfx
-Launch("https://wonderful-coast-01304d900.7.azurestaticapps.net")
+Launch("https://<your-static-web-app-url>")
 ```
 
 ## Add To Teams
@@ -50,10 +50,10 @@ In Teams:
 Channel > + Add a tab > Website > paste the Azure Static Web Apps URL
 ```
 
-Use this URL:
+Use the Azure Static Web Apps URL created in your tenant:
 
 ```text
-https://wonderful-coast-01304d900.7.azurestaticapps.net
+https://<your-static-web-app-url>
 ```
 
 ## Result Export
@@ -110,8 +110,10 @@ To re-enable Microsoft sign-in later, add this route back to the top-level confi
 The app also sets a Teams-friendly frame policy:
 
 ```text
-Content-Security-Policy: frame-ancestors 'self' https://teams.microsoft.com https://*.teams.microsoft.com;
+Content-Security-Policy: frame-ancestors 'self' https://teams.microsoft.com https://*.teams.microsoft.com https://*.cloud.microsoft https://*.skype.com;
 ```
+
+The `https://*.cloud.microsoft` entry is required for New Teams/Microsoft 365 hosts.
 
 ## Deployed Resource
 
